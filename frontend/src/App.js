@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { fetchListUsers } from './actions'
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchListUsers } from './actions';
 import routes from './routes';
 import Notfound from './Notfound';
 import { Route, Link, Switch, useHistory } from "react-router-dom";
 
-const App = ({ propListUsers, loading, hasErrors }) => {
+const App = () => {
+  const dispatch = useDispatch();
+  const propListUsers = (search) => dispatch(fetchListUsers(search));
+
   useEffect(() => {
     console.log('render app!');
 
@@ -76,10 +79,4 @@ const App = ({ propListUsers, loading, hasErrors }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    propListUsers: (search) => dispatch(fetchListUsers(search)),
-  };
-};
-
-export default connect(null, mapDispatchToProps)(App);
+export default App;

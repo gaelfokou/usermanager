@@ -12,7 +12,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from "react-router-dom";
-import { withReduxProvider } from "./store";
+import { WithReduxProvider } from "./store";
+import ReduxToastr from 'react-redux-toastr';
 
 const Routing = () => {
   return (
@@ -22,7 +23,16 @@ const Routing = () => {
   );
 };
 
-const RoutingProvider = withReduxProvider(Routing);
+const RoutingProvider = () => (
+  <WithReduxProvider>
+    <Routing />
+    <ReduxToastr
+      getState={(state) => state.toastr} // This is the default
+      progressBar
+      closeOnToastrClick
+    />
+  </WithReduxProvider>
+);
 
 ReactDOM.render(
   <RoutingProvider />,

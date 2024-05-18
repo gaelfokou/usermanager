@@ -1,7 +1,6 @@
 import * as constants from "./constants";
-import { defineState } from 'redux-localstore';
 
-const defaultState = {
+const initialState = {
   users: [],
   count: 0,
   next: null,
@@ -23,25 +22,23 @@ const defaultState = {
   },
 };
 
-const initialState = defineState(defaultState)('users');
-
 function usersReducer(state = initialState, action) {
   switch (action.type) {
     case constants.FILL_USER:
       let user = {};
 
-      if (action.payload.target.id == 'hometown' || action.payload.target.id == 'age' || action.payload.target.id == 'gender') {
+      if (action.payload.id == 'hometown' || action.payload.id == 'age' || action.payload.id == 'gender') {
         user = {
           ...state.user,
           userprofile: {
             ...state.user.userprofile,
-            [action.payload.target.id]: action.payload.target.value,
+            [action.payload.id]: action.payload.value,
           },
         };
       } else {
         user = {
           ...state.user,
-          [action.payload.target.id]: action.payload.target.value,
+          [action.payload.id]: action.payload.value,
         };
       }
 

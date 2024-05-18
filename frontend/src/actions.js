@@ -28,8 +28,9 @@ export const listUsers = (data) => ({
 });
 
 export function fetchFillUser(event) {
+  const { id, value } = event.target;
   return async (dispatch) => {
-    dispatch(fillUser(event));
+    dispatch(fillUser({id, value}));
   };
 }
 

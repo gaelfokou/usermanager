@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
 // import $ from 'jquery';
-import { fetchEditUser, fetchResetUser, fetchListUsers, fetchDeleteUser } from './actions'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEditUser, fetchResetUser, fetchListUsers, fetchDeleteUser } from './actions';
 import { Route, Link, useHistory } from "react-router-dom";
 import routes from './routes';
-import { connect } from "react-redux";
 import BootstrapTable from "react-bootstrap-table-next";
 import paginationFactory from "react-bootstrap-table2-paginator";
 import moment from 'moment';
 import {toastr} from 'react-redux-toastr';
 
-const Users = ({ propListUsers, propDeleteUser, match, loading, users, count, next, previous, hasErrors }) => {
+const Users = ({ match }) => {
   const [state, setState] = useState({title: true, page: 1, sizePerPage: Number.parseInt(process.env.PAGE_SIZE)});
+
+  const dispatch = useDispatch();
+  const { loading, users, count, next, previous, hasErrors } = useSelector(state => state.users);
+
+  const propListUsers = (search, page, sizePerPage) => dispatch(fetchListUsers(search, page, sizePerPage));
+  const propDeleteUser = (id) => dispatch(fetchDeleteUser(id));
 
   useEffect(() => {
     console.log('render users!');
@@ -136,7 +142,7 @@ const Users = ({ propListUsers, propDeleteUser, match, loading, users, count, ne
       />
       <Route
         path={`${match.path}/edit/:userId`}
-        render={(props) => <EditUser data={users} {...props} state={state} setState={setState} />}
+        render={(props) => <Edit data={users} {...props} state={state} setState={setState} />}
       />
     </div>
   );
@@ -193,11 +199,14 @@ const User = ({ match, data, state, setState }) => {
   );
 };
 
-const Edit = ({ propEditUser, propResetUser, loading, user, hasErrors, match, data, state, setState }) => {
+const Edit = ({ loading, user, hasErrors, match, data, state, setState }) => {
   var user = data.find(p => p.id == match.params.userId);
   user && (user.password = '');
   user && (user.confirm_password = '');
   const [stateUser, setStateUser] = user ? useState({...user}) : useState({});
+
+  const propResetUser = () => dispatch(fetchResetUser());
+  const propEditUser = (user, callbackEditUser) => dispatch(fetchEditUser(user, callbackEditUser));
 
   useEffect(() => {
     console.log('render edit!');
@@ -367,24 +376,4 @@ const Edit = ({ propEditUser, propResetUser, loading, user, hasErrors, match, da
   );
 };
 
-const mapStateToProps = (state) => ({
-  loading: state.users.loading,
-  users: state.users.users,
-  count: state.users.count,
-  next: state.users.next,
-  previous: state.users.previous,
-  hasErrors: state.users.hasErrors,
-});
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    propResetUser: () => dispatch(fetchResetUser()),
-    propEditUser: (user, callbackEditUser) => dispatch(fetchEditUser(user, callbackEditUser)),
-    propListUsers: (search, page, sizePerPage) => dispatch(fetchListUsers(search, page, sizePerPage)),
-    propDeleteUser: (id) => dispatch(fetchDeleteUser(id)),
-  };
-};
-
-const EditUser = connect(mapStateToProps, mapDispatchToProps)(Edit);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Users);
+export default Users;

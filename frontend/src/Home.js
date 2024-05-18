@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
 // import $ from 'jquery';
-import { fetchFillUser, fetchAddUser, fetchResetUser } from './actions'
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchFillUser, fetchAddUser, fetchResetUser } from './actions';
 import { Link } from "react-router-dom";
 import routes from './routes';
 import {toastr} from 'react-redux-toastr';
 
-const Home = ({ propFillUser, propAddUser, propResetUser, loading, user, hasErrors }) => {
+const Home = () => {
   const [state, setState] = useState({});
+
+  const dispatch = useDispatch();
+  const { loading, user, hasErrors } = useSelector(state => state.users);
+
+  const propFillUser = (event) => dispatch(fetchFillUser(event));
+  const propResetUser = () => dispatch(fetchResetUser());
+  const propAddUser = (user, callbackAddUser) => dispatch(fetchAddUser(user, callbackAddUser));
 
   useEffect(() => {
     console.log('render home!');
@@ -196,18 +203,4 @@ const Home = ({ propFillUser, propAddUser, propResetUser, loading, user, hasErro
   );
 };
 
-const mapStateToProps = (state) => ({
-  loading: state.users.loading,
-  user: state.users.user,
-  hasErrors: state.users.hasErrors,
-});
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    propFillUser: (event) => dispatch(fetchFillUser(event)),
-    propResetUser: () => dispatch(fetchResetUser()),
-    propAddUser: (user, callbackAddUser) => dispatch(fetchAddUser(user, callbackAddUser)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;
