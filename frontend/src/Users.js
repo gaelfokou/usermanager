@@ -19,8 +19,6 @@ const Users = ({ match }) => {
   const propDeleteUser = (id) => dispatch(fetchDeleteUser(id));
 
   useEffect(() => {
-    console.log('render users!');
-
     state.title && (document.title = routes.users.title);
 
     $('.navbar-nav').on('click', '.nav-item', function () {
@@ -152,8 +150,6 @@ const User = ({ match, data, state, setState }) => {
   var user = data.find(p => p.id == match.params.userId);
 
   useEffect(() => {
-    console.log('render user!');
-
     user && (document.title = `${user.first_name} ${user.last_name}`);
 
     console.log('user', user);
@@ -209,8 +205,6 @@ const Edit = ({ loading, user, hasErrors, match, data, state, setState }) => {
   const propEditUser = (user, callbackEditUser) => dispatch(fetchEditUser(user, callbackEditUser));
 
   useEffect(() => {
-    console.log('render edit!');
-
     user && (document.title = `${user.first_name} ${user.last_name}`);
 
     console.log('user', user);

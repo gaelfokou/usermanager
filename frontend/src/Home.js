@@ -17,8 +17,6 @@ const Home = () => {
   const propAddUser = (user, callbackAddUser) => dispatch(fetchAddUser(user, callbackAddUser));
 
   useEffect(() => {
-    console.log('render home!');
-
     document.title = routes.home.title;
 
     $('.navbar-nav').on('click', '.nav-item', function () {

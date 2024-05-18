@@ -46,7 +46,7 @@ export function fetchDeleteUser(id) {
     const baseUrl = `${process.env.API_URL}/api/user/destroy/${id}/`;
 
     requests.fetch(baseUrl, 'DELETE')
-    .then((response) => {
+    .then(async (response) => {
       if (response.ok) {
         if (response.status === 200) {
           dispatch(fetchListUsers());
@@ -79,8 +79,9 @@ export function fetchAddUser(data, callbackAddUser) {
       const baseUrl = `${process.env.API_URL}/api/user/create/`;
 
       requests.fetch(baseUrl, 'POST', {}, data)
-      .then((response) => {
+      .then(async (response) => {
         if (response.ok) {
+          const responseData = await response.json();
           if (response.status === 201) {
             dispatch(resetUser());
             dispatch(successUser());
@@ -94,7 +95,7 @@ export function fetchAddUser(data, callbackAddUser) {
             dispatch(failureUser());
             callbackAddUser({
               title: "Error",
-              message: JSON.stringify(response.json()),
+              message: JSON.stringify(responseData),
               type: 'error',
               success: false
             });
@@ -136,10 +137,11 @@ export function fetchListUsers(search='', page=1, page_size=Number.parseInt(proc
     const baseUrl = `${process.env.API_URL}/api/user/`;
 
     requests.fetch(baseUrl, 'GET', {}, {search, page, page_size})
-    .then((response) => {
+    .then(async (response) => {
       if (response.ok) {
+        const responseData = await response.json();
         if (response.status === 200) {
-          dispatch(listUsers(response.json()));
+          dispatch(listUsers(responseData));
           dispatch(successUser());
         } else {
           dispatch(failureUser());
@@ -169,8 +171,9 @@ export function fetchEditUser(data, callbackEditUser) {
       const baseUrl = `${process.env.API_URL}/api/user/update/${data.id}/`;
 
       requests.fetch(baseUrl, 'PUT', {}, data)
-      .then((response) => {
+      .then(async (response) => {
         if (response.ok) {
+          const responseData = await response.json();
           if (response.status === 200) {
             dispatch(resetUser());
             dispatch(successUser());
@@ -184,7 +187,7 @@ export function fetchEditUser(data, callbackEditUser) {
             dispatch(failureUser());
             callbackEditUser({
               title: "Error",
-              message: JSON.stringify(response.json()),
+              message: JSON.stringify(responseData),
               type: 'error',
               success: false
             });

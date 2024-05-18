@@ -10,8 +10,6 @@ const App = () => {
   const propListUsers = (search) => dispatch(fetchListUsers(search));
 
   useEffect(() => {
-    console.log('render app!');
-
     $('.navbar-brand').on('click', function () {
       $('.nav-item').removeClass('active');
       $('.nav-item:eq(0)').addClass('active');
