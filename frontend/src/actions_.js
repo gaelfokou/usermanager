@@ -44,17 +44,13 @@ export function fetchDeleteUser(id) {
     dispatch(startUser());
     const baseUrl = `${process.env.API_URL}/api/user/destroy/${id}/`;
 
-    requests.fetch(baseUrl, 'DELETE')
+    requests.axios(baseUrl, 'DELETE')
     .then((response) => {
-      if (response.ok) {
-        if (response.status === 200) {
-          dispatch(fetchListUsers());
-          dispatch(successUser());
-        } else {
-          dispatch(failureUser());
-        }
+      if (response.status === 200) {
+        dispatch(fetchListUsers());
+        dispatch(successUser());
       } else {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        dispatch(failureUser());
       }
     })
     .catch((error) => dispatch(failureUser()));
@@ -77,39 +73,44 @@ export function fetchAddUser(data, callbackAddUser) {
       dispatch(startUser());
       const baseUrl = `${process.env.API_URL}/api/user/create/`;
 
-      requests.fetch(baseUrl, 'POST', {}, data)
+      requests.axios(baseUrl, 'POST', {}, data)
       .then((response) => {
-        if (response.ok) {
-          if (response.status === 201) {
-            dispatch(resetUser());
-            dispatch(successUser());
-            callbackAddUser({
-              title: "Success",
-              message: "Enregistrement effectué avec succès",
-              type: 'success',
-              success: true
-            });
-          } else {
-            dispatch(failureUser());
-            callbackAddUser({
-              title: "Error",
-              message: JSON.stringify(response.json()),
-              type: 'error',
-              success: false
-            });
-          }
+        if (response.status === 201) {
+          dispatch(resetUser());
+          dispatch(successUser());
+          callbackAddUser({
+            title: "Success",
+            message: "Enregistrement effectué avec succès",
+            type: 'success',
+            success: true
+          });
         } else {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          dispatch(failureUser());
+          callbackAddUser({
+            title: "Error",
+            message: JSON.stringify(error.response.data),
+            type: 'error',
+            success: false
+          });
         }
       })
       .catch((error) => {
         dispatch(failureUser());
-        callbackAddUser({
-          title: "Error",
-          message: JSON.stringify(error.message),
-          type: 'error',
-          success: false
-        });
+        if (error.response !== undefined) {
+          callbackAddUser({
+            title: "Error",
+            message: JSON.stringify(error.response.data),
+            type: 'error',
+            success: false
+          });
+        } else {
+          callbackAddUser({
+            title: "Error",
+            message: JSON.stringify(error.message),
+            type: 'error',
+            success: false
+          });
+        }
       });
     } else if (data.password.trim() != data.confirm_password.trim()) {
       callbackAddUser({
@@ -134,17 +135,13 @@ export function fetchListUsers(search='', page=1, page_size=Number.parseInt(proc
     dispatch(startUser());
     const baseUrl = `${process.env.API_URL}/api/user/`;
 
-    requests.fetch(baseUrl, 'GET', {}, {search, page, page_size})
+    requests.axios(baseUrl, 'GET', {}, {search, page, page_size})
     .then((response) => {
-      if (response.ok) {
-        if (response.status === 200) {
-          dispatch(listUsers(response.json()));
-          dispatch(successUser());
-        } else {
-          dispatch(failureUser());
-        }
+      if (response.status === 200) {
+        dispatch(listUsers(response.data));
+        dispatch(successUser());
       } else {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        dispatch(failureUser());
       }
     })
     .catch((error) => dispatch(failureUser()));
@@ -167,39 +164,44 @@ export function fetchEditUser(data, callbackEditUser) {
       dispatch(startUser());
       const baseUrl = `${process.env.API_URL}/api/user/update/${data.id}/`;
 
-      requests.fetch(baseUrl, 'PUT', {}, data)
+      requests.axios(baseUrl, 'PUT', {}, data)
       .then((response) => {
-        if (response.ok) {
-          if (response.status === 200) {
-            dispatch(resetUser());
-            dispatch(successUser());
-            callbackEditUser({
-              title: "Success",
-              message: "Modification effectué avec succès",
-              type: 'success',
-              success: true
-            });
-          } else {
-            dispatch(failureUser());
-            callbackEditUser({
-              title: "Error",
-              message: JSON.stringify(response.json()),
-              type: 'error',
-              success: false
-            });
-          }
+        if (response.status === 200) {
+          dispatch(resetUser());
+          dispatch(successUser());
+          callbackEditUser({
+            title: "Success",
+            message: "Modification effectué avec succès",
+            type: 'success',
+            success: true
+          });
         } else {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          dispatch(failureUser());
+          callbackEditUser({
+            title: "Error",
+            message: JSON.stringify(error.response.data),
+            type: 'error',
+            success: false
+          });
         }
       })
       .catch((error) => {
         dispatch(failureUser());
-        callbackEditUser({
-          title: "Error",
-          message: JSON.stringify(error.message),
-          type: 'error',
-          success: false
-        });
+        if (error.response !== undefined) {
+          callbackEditUser({
+            title: "Error",
+            message: JSON.stringify(error.response.data),
+            type: 'error',
+            success: false
+          });
+        } else {
+          callbackEditUser({
+            title: "Error",
+            message: JSON.stringify(error.message),
+            type: 'error',
+            success: false
+          });
+        }
       });
     } else if (data.password.trim() != data.confirm_password.trim()) {
       callbackEditUser({

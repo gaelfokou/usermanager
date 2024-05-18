@@ -73,10 +73,6 @@ const Home = ({ propFillUser, propAddUser, propResetUser, loading, user, hasErro
           toastr.error(data.title, data.message);
         }
       }
-
-      return {
-        type: '',
-      };
     });
   };
 

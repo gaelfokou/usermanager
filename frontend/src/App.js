@@ -31,25 +31,6 @@ const App = ({ propListUsers, loading, hasErrors }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    propAddUser(user, (data) => {
-      console.log('data', data);
-
-      if (data.success) {
-        toastr.success(data.title, data.message);
-        propResetUser();
-      } else {
-        if (data.type == 'warning') {
-          toastr.warning(data.title, data.message);
-        } else {
-          toastr.error(data.title, data.message);
-        }
-      }
-
-      return {
-        type: '',
-      };
-    });
   };
 
   return (

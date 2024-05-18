@@ -244,10 +244,6 @@ const Edit = ({ propEditUser, propResetUser, loading, user, hasErrors, match, da
           toastr.error(data.title, data.message);
         }
       }
-
-      return {
-        type: '',
-      };
     });
   };
 
